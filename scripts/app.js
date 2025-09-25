@@ -2,7 +2,8 @@ let button = document.getElementById('btnWeather');
 let div = document.getElementById('out');
 
 button.addEventListener('click', function () {
-    let url = '';
+    let url = 'https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&hourly=temperature_2m&current=temperature_2m&timezone=America%2FSao_Paulo';
+
     fetch(url)
     .then(function (response) {
         if (response.ok) {
@@ -13,6 +14,7 @@ button.addEventListener('click', function () {
         }
     })
     .then(function (json) {
+        console.log(json);
         // let post = Post.fromRaw(json);
         // div = postsrenderFrom(div);
     })
