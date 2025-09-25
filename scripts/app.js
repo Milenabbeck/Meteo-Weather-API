@@ -1,8 +1,23 @@
+let latitude = "52.52";
+let longitude = "13.41";
+let current = "temperature_2m";
+let timezone = "America/Sao_Paulo";
+
 let button = document.getElementById('btnWeather');
+let statusInfo = document.getElementById('status');
 let div = document.getElementById('out');
 
 button.addEventListener('click', function () {
-    let url = 'https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&hourly=temperature_2m&current=temperature_2m&timezone=America%2FSao_Paulo';
+    let params = new URLSearchParams({
+        latitude: latitude,
+        longitude: longitude,
+        current: current,
+        timezone: timezone
+    })
+
+    let url = `https://api.open-meteo.com/v1/forecast?${params.toString()}`;
+
+    uptadeStatus("Carregando...");
 
     fetch(url)
     .then(function (response) {
@@ -14,14 +29,22 @@ button.addEventListener('click', function () {
         }
     })
     .then(function (json) {
-        console.log(json);
-        // let post = Post.fromRaw(json);
-        // div = postsrenderFrom(div);
+        let current = json.current;
+        let weather = Weather.fromRaw(current);
+        div = weather.renderFrom(div);
     })
     .catch(function (error) {
         renderError(error);
     })
+    // .finally(function () {
+    //     uptadeStatus("");
+    // }) // Versão com função anônima
+    .finally(() => uptadeStatus(""))
 });
+
+function uptadeStatus(msg) {
+    statusInfo.textContent = msg || "";
+}
 
 function renderError(error) {
     div.innerHTML = "";
